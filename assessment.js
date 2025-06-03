@@ -1,8 +1,8 @@
 'use strict';
-const userNameInput    = document.getElementById('user-name');
+const userNameInput = document.getElementById('user-name');
 const assessmentButton = document.getElementById('assessment');
-const resultDivision   = document.getElementById('result-area');
-const tweetDivision    = document.getElementById('tweet-area');
+const resultDivision = document.getElementById('result-area');
+const tweetDivision = document.getElementById('tweet-area');
 
 assessmentButton.addEventListener( // イベント検知設定の追加
   'click',
@@ -16,15 +16,28 @@ assessmentButton.addEventListener( // イベント検知設定の追加
 
     // 診断結果表示エリアの作成
     resultDivision.innerText = '';
-    const header = document.createElement('h3');
-    header.innerText = '診断結果';
-    resultDivision.appendChild(header);
+
+    // headerDivision の作成
+    const headerDivision = document.createElement('div');
+    headerDivision.setAttribute('class', 'card-header text-bg-primary');
+    headerDivision.innerText = '診断結果';
+
+    // bodyDivision の作成
+    const bodyDivision = document.createElement('div');
+    bodyDivision.setAttribute('class', 'card-body');
 
     const paragraph = document.createElement('p');
+    paragraph.setAttribute('class', 'card-text');
     const result = assessment(userName);
     paragraph.innerText = result;
-    resultDivision.appendChild(paragraph);
+    bodyDivision.appendChild(paragraph);
 
+    // resultDivision に Bootstrap のスタイルを適用する
+    resultDivision.setAttribute('class', 'card');
+
+    // headerDivision と bodyDivision を resultDivision に差し込む
+    resultDivision.appendChild(headerDivision);
+    resultDivision.appendChild(bodyDivision);
     // ツイートエリアの作成
     tweetDivision.innerText = '';
     const anchor = document.createElement('a');
@@ -38,7 +51,7 @@ assessmentButton.addEventListener( // イベント検知設定の追加
     anchor.setAttribute('data-text', '診断結果の文章');
     anchor.setAttribute('data-text', result);
     tweetDivision.appendChild(anchor);
-    
+
     const script = document.createElement('script');
     script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
     tweetDivision.appendChild(script);
@@ -48,7 +61,7 @@ assessmentButton.addEventListener( // イベント検知設定の追加
 userNameInput.addEventListener(
   'keydown',
   (event) => {
-    if(event.code === 'Enter') {
+    if (event.code === 'Enter') {
       assessmentButton.dispatchEvent(new Event('click'))
     }
   }
@@ -88,7 +101,7 @@ function assessment(userName) {
 
   // 文字のコード番号の合計を回答の数で割って添字の数値を求める
   const index = sumOfCharCode % answers.length;
-  let result  = answers[index];
-  result      = result.replaceAll('###userName###', userName);
+  let result = answers[index];
+  result = result.replaceAll('###userName###', userName);
   return result;
 }
